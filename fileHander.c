@@ -1,7 +1,7 @@
 #include "readFileAndHander.h"
 
-int *getFileIntArr(char *filename){
-	int *arr = NULL;
+IntArray getFileIntArr(char *filename){
+	IntArray result = {NULL,0};
 	FILE *fp = fopen(filename,"r");
 
 	if( fp ){
@@ -18,18 +18,19 @@ int *getFileIntArr(char *filename){
 				}
 			}
 
-			arr = (int*)malloc(arrlen * sizeof(int));
-			if( arr ){
+			result.elem = (int*)malloc(arrlen * sizeof(int));
+			if( result.elem ){
+				result.length = arrlen;
 				demit = strtok(line," ");
 				while( demit ){
-					arr[curPos++] = atoi(demit);
+					result.elem[curPos++] = atoi(demit);
 					demit = strtok(NULL," ");
 				}
 			}
 		}
 	}
 
-	return arr;
+	return result;
 }
 
 int *getFileIntArrMultiple(char *filename){
