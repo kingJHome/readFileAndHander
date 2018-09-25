@@ -1,39 +1,34 @@
-#include "readFileAndHander.h"
+#include "fileHander.h"
 
-IntArray getFileIntArr(char *filename){
-	IntArray result = {NULL,0};
+void getFileIntArr(char *filename,hander __getContent,void *oArg){
 	FILE *fp = fopen(filename,"r");
 
 	if( fp ){
 		char *line = NULL;
-		char setNum = 0;
+		size_t setNum = 0;
 
 		if( getline(&line, &setNum, fp) != -1 ){
-			int arrlen = 0,curPos = 0;
-			char *demit = NULL;
-
-			for(int i = 0; line[i]!='\0'; ++i){
-				if( line[i] == ' ' ){
-					arrlen++;
-				}
-			}
-
-			result.elem = (int*)malloc(arrlen * sizeof(int));
-			if( result.elem ){
-				result.length = arrlen;
-				demit = strtok(line," ");
-				while( demit ){
-					result.elem[curPos++] = atoi(demit);
-					demit = strtok(NULL," ");
-				}
+			if( strlen(line) ){
+				__getContent(line,0,oArg);
 			}
 		}
 	}
-
-	return result;
 }
 
-int *getFileIntArrMultiple(char *filename){
+void getFileIntArrMultiple(char *filename,hander __getContent,void *oArg){
+	FILE *fp = fopen(filename,"r");
+
+	if( fp ){
+		int curRow = 1;
+		char *line = NULL;
+		size_t setNum = 0;
+
+		while( getline(&line, &setNum, fp) != -1 ){
+			setNum = 0;
+			__getContent(line,curRow,oArg);
+			++curRow;
+		}
+	}
 }
 
 char *getFileCharArr(char *filename){
